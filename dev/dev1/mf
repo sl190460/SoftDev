@@ -1,0 +1,16 @@
+CC=gcc
+CFLAGS= -Wall
+MONTH= $(shell date '+%B')
+
+
+all=strange_app2
+
+#strange_app2 : strange_app.c ${MONTH}.o
+#	${CC} ${CFLAGS} strange_app.c ${MONTH}.o -o strange_app
+
+
+${MONTH}.o: ${MONTH}.c
+	${CC} ${CFLAGS} -c ${MONTH}.c -o ${MONTH}.o
+
+clean:
+	rm -f *.o core
