@@ -1,0 +1,187 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+
+import socket
+import re
+import pickle
+import itertools
+import datetime
+
+host="localhost"
+port = 9999
+
+socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+socket.connect((host, port))
+
+print("connection established\n")
+
+msg1 = socket.recv(1024)
+print (msg1)
+username="lamdouar\n"
+socket.send(username.encode())
+print ("my name is lamdouar\n")
+msg2 = socket.recv(1024)
+print (msg2)
+print ("my secret is edd7e5f6b119ff787ff3a43a5458b5b8\n")
+socket.send("edd7e5f6b119ff787ff3a43a5458b5b8\n")
+msg3 = socket.recv(1024)
+print (msg3)
+socket.send("44\n")
+msg4 = socket.recv(1024)
+i=0
+ub=500000
+lb=0
+while (msg4=="nope. Try something bigger\n" or "nope. Try something smaller\n"):
+	i=(ub+lb)/2
+	s=str(i)+"\n"
+	socket.send(s)
+	msg4 = socket.recv(1024)
+	if (msg4=="nope. Try something bigger\n"):
+		lb=i
+	elif (msg4=="nope. Try something smaller\n"):
+		ub=i
+	else:
+		print ("I'm gonna go for "+str(i))
+		break
+	
+print (msg4)
+msg5 = socket.recv(1024)
+fn=''
+sn=''
+tn=''
+print (msg5)
+msg5 = msg5.split('\n')
+for line in msg5:
+	fn+=line[0:7]
+	sn+=line[16:23]
+	tn+=line[32:40]
+fc=len(re.findall("#", fn))
+sc=len(re.findall("#", sn))
+tc=len(re.findall("#", tn))
+ftests=fn[19:21]
+fteste=fn[27:33]
+ftestc=fn[:8]
+slenf=str(len(re.findall("#", ftests)))
+elenf=str(len(re.findall("#",fteste)))
+clenf=str(len(re.findall("#",ftestc)))
+stests=sn[19:21]
+steste=sn[27:33]
+stestc=sn[:8]
+slens=str(len(re.findall("#", stests)))
+elens=str(len(re.findall("#",steste)))
+clens=str(len(re.findall("#",stestc)))
+ttests=tn[19:21]
+tteste=tn[27:33]
+ttestc=tn[:8]
+slent=str(len(re.findall("#", ttests)))
+elent=str(len(re.findall("#",tteste)))
+clent=str(len(re.findall("#",ttestc)))
+
+
+
+if fc==13:
+        fe="1"
+if fc==22:
+	if clenf=="8":
+		fe="5"
+	else:
+		fe="2"
+if fc==21:
+        fe="3"
+if fc==15:
+        fe="4"
+if fc==23:
+        if fn[14:21]=='#      ':
+                fe="6"
+        elif fn[28:35]=='      #':
+                fe="9"
+	else:
+		fe="8"
+if fc==14:
+        fe="7"
+if fc==19:
+        fe="0"
+
+
+if sc==13:
+        se="1"
+if sc==22:
+        if clens=="8":
+                se="5"
+        else:
+                se="2"
+if sc==21:
+        se="3"
+if sc==15:
+        se="4"
+if sc==23:
+        if sn[28:35]=='      #':
+                se="9"
+        elif sn[14:21]=='#      ':
+                se="6"
+        else:
+                se="8"
+if sc==14:
+        se="7"
+if sc==19:
+        se="0"
+
+if tc==13:
+        te="1"
+if tc==22:
+        if clent=="8":
+                te="5"
+        else:
+                te="2"
+if tc==21:
+        te="3"
+if tc==15:
+        te="4"
+if tc==23:
+        if tn[28:35]=='      #':
+                te="9"
+	elif tn[14:21]=='#      ':
+                te="6"
+        else:
+                te="8"
+if tc==14:
+        te="7"
+if tc==19:
+        te="0"
+
+number=fe+se+te
+print ("I think it is "+number)
+numsend=str(number)+'\n'
+socket.send(numsend)
+msg6 = socket.recv(1024)
+print msg6
+msg7=socket.recv(1024)
+print msg7
+p_content=''
+p_content=msg7.split('\n')[1:-3]
+pickl_format=''
+for i in p_content:
+	pickl_format+=i+'\n'
+p=pickle.loads(pickl_format)
+m=p.microsecond
+print m
+
+socket.send(str(m)+'\n')
+msg8=socket.recv(1024)
+print msg8
+msg9=socket.recv(1024)
+print msg9
+date_string=msg9[25:34]
+y=date_string[7:9]
+month=date_string[3:6]
+day=date_string[0:2]
+year=str(int(y)+2000)
+date=datetime.datetime.strptime(day+' '+month+' '+year, '%d %b %Y')
+weekdy=date.strftime("%A")
+print weekdy
+socket.send(str(weekdy)+'\n')
+msg10=socket.recv(1024)
+print msg10
+msg11=socket.recv(1024)
+print msg11
+print ("\nThank you!!")

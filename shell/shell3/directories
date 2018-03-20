@@ -1,0 +1,21 @@
+#!/bin/bash
+#script to create the desired directory tree
+mkdir s3
+cd s3
+mkdir -p ./dirA/dirC/dirD
+mkdir -p ./dirA/dirE
+mkdir -p ./dirB/dirF/dirG
+
+touch -a -m -t 201710101010 ./file1
+touch -a -m -t 201710101010 ./dirA/dirC/file4
+touch -a -m -t 201710101010 ./dirA/dirC/file5
+touch -a -m -t 201710101010 ./dirA/dirC/dirD/file8
+touch ./dirA/dirC/dirD/file6
+touch -a -m -t 201710101010 ./dirA/dirC/dirD/file7
+touch -a -m -t 201710101010 ./dirA/dirE/file9
+touch -a -m -t 201710101010 ./dirA/file2
+touch -a -m -t 201710101010 ./dirA/file3
+touch ./dirB/file10
+touch -a -m -t 201710101010 ./dirB/dirF/file11
+touch -a -m -t 201710101010 ./dirB/dirF/file12
+touch -a -m -t 201710101010 ./dirB/dirF/dirG/file13 

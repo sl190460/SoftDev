@@ -1,0 +1,30 @@
+=============================================================================
+                         Facebook Wall Analysis
+=============================================================================
+
+Facebook allows users to download all their profile information.
+The data comes in an archive containing different files. One of the file 
+contains a copy of your wall, with all the entries since the account was 
+created.
+
+Now, suppose you want to extract the people that commented the most on the
+posts on your wall. For example, given the following
+snippet of wall, your command has to print:
+
+ 2 John McClane
+ 1 John Rambo
+ 1 Chuck Norris
+
+where the first column shows the number of comments, and the second the 
+user name.
+
+---------------------------
+Submission
+---------------------------
+
+Submit a text file containing in the first line your command
+as you would write it on the shell. Your command will be tested invoking:
+
+> cat wall.html | sh yourfile
+
+

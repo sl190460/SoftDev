@@ -1,0 +1,53 @@
+#!/bin/bash
+cd s3
+
+#directories containing files used in the past month
+find . -atime -30 -type f | sed -r 's/(.*)\/(.*)/\1\//' | grep -v '^.$' | grep -oP '/[^/]+' | sed -r 's/^.//' | sort | uniq > used_f.txt
+#directories containing files not used in the past month
+find . -atime +30 -type f | sed -r 's/(.*)\/(.*)/\1\//' | grep -v '^.$' | grep -oP '/[^/]+' | sed -r 's/^.//' | sort | uniq > unused_f.txt
+#directories containing only files used in the past month
+find . -atime -30 -type f | sed -r 's/(.*)\/(.*)/\1\//' | grep -v '^\.\/$' | sort | uniq > used.txt
+#directories containing only files not used in last month
+find . -atime +30 -type f | sed -r 's/(.*)\/(.*)/\1\//' | grep -v '^\.\/$' | sort | uniq > unused.txt
+
+cat used.txt unused.txt | sort | uniq -u | sed -r 's/^.//' > path_u.txt
+for line in $(cat path_u.txt)
+do
+	echo "$line">file.txt
+	grep -oP '/[^/]+' file.txt | cut -d "/" -f 2  > path_folders.txt
+	diff used_f.txt path_folders.txt | grep '^>' | sed 's/^>\ //'>test.txt
+	if [ -s test.txt ]
+	then
+		echo "$line" >> compressable.txt
+	fi	
+	rm file.txt
+	rm path_folders.txt
+	rm test.txt
+done
+cat compressable.txt | sed -r 's/^/\./' | sort -n -s > c_path.txt
+cat c_path.txt | awk '{ print length($0) " " $0; }' | sort -n | cut -d ' ' -f 2->sorted_path.txt
+f="0"
+cur_dir=$(pwd)
+for path in $(cat sorted_path.txt)
+do
+	p="$(dirname $path)"
+	check=$(sed 's/.\{1\}$//'<<< $f)
+	if [ "$p" != "$check" ]
+	then
+		fold=$(echo "$path" | sed s'/.$//' | sed -r 's/(.*)\/(.*$)/\2\//'| sed s'/.$//')
+		cd $p
+		tar -zcf $fold.tgz $fold/
+		rm -r $fold
+		cd $cur_dir
+	fi
+	f=$path
+done
+
+rm used.txt
+rm unused.txt
+rm used_f.txt
+rm unused_f.txt
+rm path_u.txt
+rm compressable.txt
+rm c_path.txt
+rm sorted_path.txt

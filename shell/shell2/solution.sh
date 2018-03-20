@@ -1,0 +1,1 @@
+grep -E 'div class="command"'\|num-votes | cut -d '>' -f 2 | cut -d '<' -f 1 | awk '$1>=5 {print line} {line = $0}' | egrep '^[a-zA-Z]' 
